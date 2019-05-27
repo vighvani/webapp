@@ -1,51 +1,48 @@
 package webApp.dao;
 
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+
 
 public class DB {
+	private final static String url = "jdbc:postgresql://127.0.0.1:5432/Pharmacy";
+	private final static String user = "postgres";
+	private final static String pwd = "96inav07hgiv25";
 
-	public static void main(String[] argv) {
-
-		System.out.println("PostgreSQL and JDBC Connection Testing");
-
+	public static Connection connect() {
+		Connection conn = null;
 		try {
-
-			Class.forName("org.postgresql.Driver");
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println("Where is your PostgreSQL JDBC Driver? "
-					+ "Include in your library path!");
-			e.printStackTrace();
-			return;
-
-		}
-
-		System.out.println("PostgreSQL JDBC Driver Registered!");
-
-		Connection connection = null;
-
-		try {
-
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://127.0.0.1:5432/Pharmacy", "vighvani",
-					"96inav07hgiv25");
-
+			conn = DriverManager.getConnection(url, user, pwd);
+			
+			System.out.println("Successfully connected to the PostgreSQL server.");
 		} catch (SQLException e) {
-
-			System.out.println("Connection Failed! Check output console");
+			System.out.println(e.getMessage());
 			e.printStackTrace();
-			return;
-
 		}
+		return conn;
 
-		if (connection != null) {
-			System.out.println("You made it, take control your database now!");
+	}
+	public static void main(String[] args) {
+		DB db = new DB();
+		db.connect();
+	}
+	public String getUrl() {
+		return url;
+	}
+	public String getUser() {
+		return user;
+	}
+	public String getPwd() {
+		return pwd;
+	}
+	
+	
+	/* teszthez jo lesz
+	 * if (connection != null) {
+			System.out.println("Successfully connected to the PostgreSQL server.");
 		} else {
 			System.out.println("Failed to make connection!");
 		}
-	}
-
+	 */
+	
+	
 }
