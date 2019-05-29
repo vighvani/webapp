@@ -29,58 +29,38 @@
 			<td>DESCRIPTION</td>
 			<td>PATIENT ID</td>
 		</tr>
-		<%
-			try {
-				String url = "jdbc:postgresql://127.0.0.1:5432/Pharmacy";
-				String user = "postgres";
-				String pwd = "96inav07hgiv25";
-				String query = "select * from Medicines";
+		
+		<tr>
+			<td>
+				
+				
+				
+			</td>
+		</tr>
+		<tr>
+			<td>
+				
 
-				Connection conn = DriverManager.getConnection(url, user, pwd);
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(query);
-				while (rs.next()) {
-		%>
-		<tr>
-			<td>
-				<%
-					rs.getInt("MedicineID");
-				%>
+
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<%
-					rs.getString("MedName");
-				%>
+				
+
+
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<%
-					rs.getString("Description");
-				%>
+				
+
+
 			</td>
 		</tr>
-		<tr>
-			<td>
-				<%
-					rs.getString("PatientID");
-				%>
-			</td>
-		</tr>
-		<%
-			}
-		%>
+		
 	</table>
-	<%
-		rs.close();
-			stmt.close();
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	%>
+	
 
 </form>
 
