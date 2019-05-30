@@ -17,10 +17,27 @@ public class DB {
 	private static ResultSet rs = null;
 	private static int affectedRows = 0;
 
+	public static DB getInstance() {
+		if (db == null) {
+			db = new DB();
+		}
+		return db;
 
-	private static Connection connect() {
+	}
 
+	private DB() {
+		connect();
+	}
+	
+	private Connection connect() {
+		
 		try {
+			try {
+				Class.forName("org.postgresql.Driver");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			conn = DriverManager.getConnection(url, user, pwd);
 
 			System.out.println("Successfully connected to the PostgreSQL server.");
@@ -31,40 +48,8 @@ public class DB {
 		return conn;
 
 	}
-
-	public static List<Patients> getAllPatient() throws ClassNotFoundException, SQLException {
-		List<Patients> patientList = new ArrayList<Patients>();
-
-		try {
-			String query = "select * from Patients";
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
-			while (rs.next()) {
-
-				int patientID = rs.getInt("PatientID");
-				String lastName = rs.getString("LastName");
-				String firstName = rs.getString("FirstName");
-				String address = rs.getString("Address");
-				int age = rs.getInt("Age");
-
-				Patients patient = new Patients(patientID, lastName, firstName, address, age);
-				patientList.add(patient);
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} finally {
-			if (stmt != null) {
-				stmt.close();
-			}
-			if (rs != null) {
-				rs.close();
-			}
-		}
-		return patientList;
-	}
-
-	public static List<Medicines> getAllMedicines() throws ClassNotFoundException, SQLException {
+	
+	public List<Medicines> getAllMedicine() throws ClassNotFoundException, SQLException {
 		List<Medicines> medicineList = new ArrayList<Medicines>();
 
 		try {
@@ -95,17 +80,49 @@ public class DB {
 		return medicineList;
 	}
 
-	public static void insertPatient(int patientID, String lastName, String firstName, String address, int age) {
+	public List<Patients> getAllPatient() throws ClassNotFoundException, SQLException {
+		List<Patients> patientList = new ArrayList<Patients>();
+
+		try {
+			String query = "select * from Patients";	
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+			while (rs.next()) {
+
+				int patientID = rs.getInt("PatientID");
+				String lastName = rs.getString("LastName");
+				String firstName = rs.getString("FirstName");
+				String address = rs.getString("Address");
+				int age = rs.getInt("Age");
+
+				Patients patient = new Patients(patientID, lastName, firstName, address, age);
+				patientList.add(patient);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return patientList;
+	}
+
+	public void insertPatient(int patientID, String lastName, String firstName, String address, int age) {
 
 		try {
 			stmt = conn.createStatement();
 			String insert = "INSERT INTO PATIENTS (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) "
 	                + "VALUES " + "(" + patientID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
 	        stmt.executeUpdate(insert);
-	        
+	        /*
 	        Patients patient = new Patients(9, "Bozó", "Piroska", "6724 Szeged Rókusi krt 28.", 26);
-	        DB.insertPatient(patientID, lastName, firstName, address, age);
-			
+	        insertPatient(patientID, lastName, firstName, address, age);
+			*/
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -113,17 +130,17 @@ public class DB {
 
 	}
 	
-	public static void insertMedicine(int medicineID, String medicineName, String description, int patientID) {
+	public void insertMedicine(int medicineID, String medicineName, String description, int patientID) {
 
 		try {
 			stmt = conn.createStatement();
 			String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) "
 	                + "VALUES " + "(" + medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
 	        stmt.executeUpdate(insert);
-	        
+	        /*
 	        Medicines medicine = new Medicines(33, "Solumedrol", "kúp", 1);
-	        DB.insertMedicine(medicineID, medicineName, description, patientID);
-			
+	        insertMedicine(medicineID, medicineName, description, patientID);
+			*/
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -131,13 +148,13 @@ public class DB {
 
 	}
 	
-	public static int deletePatient(int patientID) {
+	public int deletePatient(int patientID) {
 
 		try {
-			String delete = "DELETE FROM Patients WHERE PatientID = ?";
+			String delete = "DELETE FROM Patients WHERE PatientID = '" + patientID + ";)";
 			PreparedStatement pstmt = conn.prepareStatement(delete);
 
-	        pstmt.setInt(8, patientID);
+	        pstmt.setInt(1, patientID);
 	       affectedRows = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -147,10 +164,10 @@ public class DB {
 		return affectedRows;
 	}
 	
-	public static int deleteMedicine(int medicineID) {
+	public int deleteMedicine(int medicineID) {
 
 		try {
-			String delete = "DELETE FROM Medicines WHERE MedicineID = ?";
+			String delete = "DELETE FROM Medicines WHERE MedicineID = '" + medicineID + ";)";
 			PreparedStatement pstmt = conn.prepareStatement(delete);
 
 	        pstmt.setInt(1, medicineID);
@@ -164,25 +181,19 @@ public class DB {
 
 	}
 	
-
-	public static DB getInstance() {
-		if (db == null) {
-			db = new DB();
-		}
-		return db;
-
-	}
-
-	private DB() {
-		connect();
-	}
-
 	public void finalize() {
 		try {
 			conn.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void main(String[] args) {
+		DB db = DB.getInstance();
+		db.connect();
+		
 	}
 
 }
