@@ -15,15 +15,45 @@
 
 	<div class="sidenav">
 		<a href="MainPage.jsp"><img class="img" alt="Main page"
-			src="D:\\work\\2\\kulso\\medicine.jpg"></a> <a href="Patients.jsp">Patients</a>
+			src="css/stethoscope.jpg"></a> <a href="Patients.jsp">Patients</a>
 		<a href="Medicines.jsp">Medicines</a>
+	</div>
+	
+	<div class="Query">
+		<h2 class="middle">Patients</h2>
+		<form id="listPatients" name="listPatients" method="POST"
+			action="listPatients">
+
+			<table align="center" border="2">
+				<tr>
+					<th>ID</th>
+					<th>LAST NAME</th>
+					<th>FIRST NAME</th>
+					<th>ADDRESS</th>
+					<th>AGE</th>
+
+				</tr>
+
+				<c:forEach items="${patientsList}" var="patientList">
+					<tr>
+						<td><c:out value="${patientList.patientID}" />
+						<td><c:out value="${patientList.lastName}" /></td>
+						<td><c:out value="${patientList.firstName}" /></td>
+						<td><c:out value="${patientList.address}" /></td>
+						<td><c:out value="${patientList.age}" /></td>
+						
+					</tr>
+				</c:forEach>
+
+			</table>
+
+		</form>
 	</div>
 
 	<div class="Insert">
-		<h2 class="middle">Patients</h2>
-		<form id="addPatient" name="addPatient" method="POST"
-			action="addPatient">
-
+		<h2 class="middle">Add patient</h2>
+		<form id="doPost" name="doPost" method="POST" action="ServletP.java">
+				
 			<table align="center" border="2">
 				<tr>
 					<th>ID</th>
@@ -35,34 +65,31 @@
 
 				</tr>
 
-				<%
-					List<Patients> patientsList = (List<Patients>) request.getAttribute("patientsList");
-				%>
-				<c:forEach items="${patientsList}" var="Patients">
+				<c:forEach items="${patientsList}" var="patientList">
 					<tr>
-						<td><c:out value="${Patients.patientID}" />
-						<td><c:out value="${Patients.pLastName}" /></td>
-						<td><c:out value="${Patients.firstName}" /></td>
-						<td><c:out value="${Patients.address}" /></td>
-						<td><c:out value="${Patients.age}" /></td>
+						<td><input type="text" name="patientID"> <c:out
+								value="${patientList.patientID}" />
+						<td><input type="text" name="lastName"> <c:out
+								value="${patientList.lastName}" /></td>
+						<td><input type="text" name="firstName"> <c:out
+								value="${patientList.firstName}" /></td>
+						<td><input type="text" name="address"> <c:out
+								value="${patientList.address}" /></td>
+								<td><input type="text" name="age"> <c:out
+								value="${patientList.age}" /></td>
 						<td><input type="hidden" name="patientsUrl"
-							value="<c:out value='${Patients.selfLink}' />" />
-							<button type="submit" name="addPatientButton">Add
-								Patient</button></td>
+							value="<c:out value='${patientList.selfLink}' />" />
+							<button type="submit" name="addPatientButton">Add</button></td>
+
+
 					</tr>
 				</c:forEach>
-
 			</table>
-
 		</form>
 	</div>
-	<div class="delete">
 	
-		
-	
-	</div>
 
-	<a href="MainPage.jsp"> Back to main page</a>
+	<a class="middle" href="MainPage.jsp"> Back to main page</a>
 </body>
 
 </html>

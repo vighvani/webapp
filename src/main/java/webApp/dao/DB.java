@@ -25,8 +25,9 @@ public class DB {
 
 	}
 
-	private DB() {
+	private DB()  {
 		connect();
+		
 	}
 	
 	private Connection connect() {
@@ -35,9 +36,8 @@ public class DB {
 			try {
 				Class.forName("org.postgresql.Driver");
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}	
 			conn = DriverManager.getConnection(url, user, pwd);
 
 			System.out.println("Successfully connected to the PostgreSQL server.");
@@ -56,13 +56,15 @@ public class DB {
 			String query = "select * from Medicines";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
+			if (rs.next() == false) { System.out.println("ResultSet in empty in Java"); }
+
 			while (rs.next()) {
 
 				int medicineID = rs.getInt("MedicineID");
 				String medicineName = rs.getString("MedName");
 				String description = rs.getString("Description");
 				int patientID = rs.getInt("PatientID");
-
+				
 				Medicines medicine = new Medicines(medicineID, medicineName, description, patientID);
 				medicineList.add(medicine);
 			}
@@ -111,6 +113,7 @@ public class DB {
 		}
 		return patientList;
 	}
+	
 
 	public void insertPatient(int patientID, String lastName, String firstName, String address, int age) {
 

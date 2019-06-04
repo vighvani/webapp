@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.List;
 
 import webApp.dao.DB;
-
 import webApp.model.Patients;
 
 import javax.servlet.ServletException;
@@ -32,9 +31,9 @@ public class ServletP extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		out.println("<h1>Patient query</h1>");
-		List<Patients> patientList = null;
+		List<Patients> patientsList = null;
 		try {
-			patientList = db.getAllPatient();
+			patientsList = db.getAllPatient();
 		} catch (ClassNotFoundException e) {
 
 			e.printStackTrace();
@@ -43,24 +42,55 @@ public class ServletP extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		if (patientList == null) {
+		if (patientsList == null) {
 			logger.error("Patient list looks empty.");
 			throw new ServletException("Medicine list returned empty!");
 
 		} else {
 			response.setStatus(HttpServletResponse.SC_OK);
 		}
-
-		request.setAttribute("patientList", patientList);
+		
+		
+		request.setAttribute("patientsList", patientsList);
 		request.getRequestDispatcher("/pages/Patients.jsp").forward(request, response);
 
 		out.close();
 
 	}
 
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		try {
+			Connection conn = (Connection) DB.getInstance();
+			PreparedStatement st = conn 
+					.prepareStatement("insert into Patients values(?, ?, ?, ?, ?)");	  
 
+	            st.setInt(1, Integer.valueOf(request.getParameter("PatientID"))); 
+
+	            st.setString(2, request.getParameter("LastName")); 
+	            
+	            st.setString(3, request.getParameter("FirstName")); 
+	            
+	            st.setString(4, request.getParameter("Address"));
+	            
+	            st.setInt(5, Integer.valueOf(request.getParameter("Age"))); 
+
+	            st.executeUpdate(); 
+	  
+
+	            st.close(); 
+	            conn.close();
+
+	            PrintWriter out = response.getWriter(); 
+	            out.println("<html><body><b>Successfully inserted"
+	                        + "</b></body></html>"); 
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 }
