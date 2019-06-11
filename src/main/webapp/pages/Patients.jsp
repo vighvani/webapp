@@ -14,13 +14,13 @@
 <body>
 
 	<div class="sidenav">
-		<a href="MainPage.jsp"><img class="img" alt="Main page"
-			src="css/stethoscope.jpg"></a> <a href="Patients.jsp">Patients</a>
-		<a href="Medicines.jsp">Medicines</a>
+		<a href="/WebApp/pages/MainPage.jsp"><img class="img" alt="Main page"
+			src="css/stethoscope.jpg"></a> <a
+			href="/WebApp/pages/Patients.jsp">Patients</a> <a href="/WebApp/pages/Medicines.jsp">Medicines</a>
 	</div>
 	
 	<div class="Query">
-		<h2 class="middle">Patients</h2>
+		<h2 align="center">Patients</h2>
 		<form id="listPatients" name="listPatients" method="POST"
 			action="listPatients">
 
@@ -51,7 +51,7 @@
 	</div>
 
 	<div class="Insert">
-		<h2 class="middle">Add patient</h2>
+		<h2 align="center">Add patient</h2>
 		<form id="doPost" name="doPost" method="POST" action="ServletP.java">
 				
 			<table align="center" border="2">
@@ -89,7 +89,7 @@
 	</div>
 	
 
-	<a class="middle" href="MainPage.jsp"> Back to main page</a>
+	<a align="center" href="/WebApp/pages/MainPage.jsp"> Back to main page</a>
 </body>
 
 </html>

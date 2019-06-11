@@ -8,11 +8,11 @@ import webApp.model.Medicines;
 import webApp.model.Patients;
 
 public class DB {
-	private final static String url = "jdbc:postgresql://127.0.0.1:5432/Pharmacy";
+	private final static String url = "jdbc:postgresql://localhost:5432/Pharmacy";
 	private final static String user = "postgres";
 	private final static String pwd = "96inav07hgiv25";
 	private static DB db = null;
-	private static Connection conn = null;
+	private static Connection conn;
 	private static Statement stmt = null;
 	private static ResultSet rs = null;
 	private static int affectedRows = 0;
@@ -22,51 +22,62 @@ public class DB {
 			db = new DB();
 		}
 		return db;
-
-	}
-
-	private DB()  {
-		connect();
-		
 	}
 	
-	private Connection connect() {
-		
-		try {
-			try {
-				Class.forName("org.postgresql.Driver");
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}	
-			conn = DriverManager.getConnection(url, user, pwd);
+	 private DB() { 
+		 connect();
+	  }
 
-			System.out.println("Successfully connected to the PostgreSQL server.");
-		} catch (SQLException e) {
+	private Connection connect() {
+		try {
+			/*
+			 try { Class.forName("org.postgresql.jdbc.Driver"); } catch
+			 (ClassNotFoundException e) {
+			 System.err.println("Unable to load PostgreSQL JDBC Driver 1");
+			 e.printStackTrace(); }
+			*/ 
+
+			// conn = DriverManager.getConnection(url, user, pwd);
+
+			if (conn == null) {
+				System.out.println("Connecting.......");
+				conn = DriverManager.getConnection(url, user, pwd);
+				System.out.println("Successfully connected to the PostgreSQL server.");
+			} else {
+				System.err.println("Connection is not created 0");
+			}
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return conn;
 
 	}
-	
+
 	public List<Medicines> getAllMedicine() throws ClassNotFoundException, SQLException {
 		List<Medicines> medicineList = new ArrayList<Medicines>();
 
 		try {
-			String query = "select * from Medicines";
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
-			if (rs.next() == false) { System.out.println("ResultSet in empty in Java"); }
+			if (conn != null) {
+				String query = "select * from Medicines";
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(query);
+				if (rs.next() == false) {
+					System.out.println("ResultSet in empty in Java");
+				}
 
-			while (rs.next()) {
+				while (rs.next()) {
 
-				int medicineID = rs.getInt("MedicineID");
-				String medicineName = rs.getString("MedName");
-				String description = rs.getString("Description");
-				int patientID = rs.getInt("PatientID");
-				
-				Medicines medicine = new Medicines(medicineID, medicineName, description, patientID);
-				medicineList.add(medicine);
+					int medicineID = rs.getInt("MedicineID");
+					String medicineName = rs.getString("MedName");
+					String description = rs.getString("Description");
+					int patientID = rs.getInt("PatientID");
+
+					Medicines medicine = new Medicines(medicineID, medicineName, description, patientID);
+					medicineList.add(medicine);
+				}
+			} else {
+				System.out.println("Connection is not created! 1");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -86,19 +97,23 @@ public class DB {
 		List<Patients> patientList = new ArrayList<Patients>();
 
 		try {
-			String query = "select * from Patients";	
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
-			while (rs.next()) {
+			if (conn != null) {
+				String query = "select * from Patients";
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(query);
+				while (rs.next()) {
 
-				int patientID = rs.getInt("PatientID");
-				String lastName = rs.getString("LastName");
-				String firstName = rs.getString("FirstName");
-				String address = rs.getString("Address");
-				int age = rs.getInt("Age");
+					int patientID = rs.getInt("PatientID");
+					String lastName = rs.getString("LastName");
+					String firstName = rs.getString("FirstName");
+					String address = rs.getString("Address");
+					int age = rs.getInt("Age");
 
-				Patients patient = new Patients(patientID, lastName, firstName, address, age);
-				patientList.add(patient);
+					Patients patient = new Patients(patientID, lastName, firstName, address, age);
+					patientList.add(patient);
+				}
+			} else {
+				System.out.println("Connection is not created! 2");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -113,69 +128,84 @@ public class DB {
 		}
 		return patientList;
 	}
-	
 
 	public void insertPatient(int patientID, String lastName, String firstName, String address, int age) {
 
 		try {
-			stmt = conn.createStatement();
-			String insert = "INSERT INTO PATIENTS (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) "
-	                + "VALUES " + "(" + patientID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
-	        stmt.executeUpdate(insert);
-	        /*
-	        Patients patient = new Patients(9, "Bozó", "Piroska", "6724 Szeged Rókusi krt 28.", 26);
-	        insertPatient(patientID, lastName, firstName, address, age);
-			*/
+			if (conn != null) {
+				stmt = conn.createStatement();
+				String insert = "INSERT INTO PATIENTS (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
+						+ patientID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
+				stmt.executeUpdate(insert);
+				/*
+				 * Patients patient = new Patients(9, "Bozó", "Piroska",
+				 * "6724 Szeged Rókusi krt 28.", 26); insertPatient(patientID, lastName,
+				 * firstName, address, age);
+				 */
+			} else {
+				System.out.println("Connection is not created! 3");
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void insertMedicine(int medicineID, String medicineName, String description, int patientID) {
 
 		try {
-			stmt = conn.createStatement();
-			String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) "
-	                + "VALUES " + "(" + medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
-	        stmt.executeUpdate(insert);
-	        /*
-	        Medicines medicine = new Medicines(33, "Solumedrol", "kúp", 1);
-	        insertMedicine(medicineID, medicineName, description, patientID);
-			*/
+			if (conn != null) {
+				stmt = conn.createStatement();
+				String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
+						+ medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
+				stmt.executeUpdate(insert);
+				/*
+				 * Medicines medicine = new Medicines(33, "Solumedrol", "kúp", 1);
+				 * insertMedicine(medicineID, medicineName, description, patientID);
+				 */
+			} else {
+				System.out.println("Connection is not created! 4");
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public int deletePatient(int patientID) {
 
 		try {
-			String delete = "DELETE FROM Patients WHERE PatientID = '" + patientID + ";)";
-			PreparedStatement pstmt = conn.prepareStatement(delete);
 
-	        pstmt.setInt(1, patientID);
-	       affectedRows = pstmt.executeUpdate();
-			
+			if (conn != null) {
+				String delete = "DELETE FROM Patients WHERE PatientID = '" + patientID + ";)";
+				PreparedStatement pstmt = conn.prepareStatement(delete);
+
+				pstmt.setInt(1, patientID);
+				affectedRows = pstmt.executeUpdate();
+			} else {
+				System.out.println("Connection is not created! 5");
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return affectedRows;
 	}
-	
+
 	public int deleteMedicine(int medicineID) {
 
 		try {
-			String delete = "DELETE FROM Medicines WHERE MedicineID = '" + medicineID + ";)";
-			PreparedStatement pstmt = conn.prepareStatement(delete);
+			if (conn != null) {
+				String delete = "DELETE FROM Medicines WHERE MedicineID = '" + medicineID + ";)";
+				PreparedStatement pstmt = conn.prepareStatement(delete);
 
-	        pstmt.setInt(1, medicineID);
-	       affectedRows = pstmt.executeUpdate();
-			
+				pstmt.setInt(1, medicineID);
+				affectedRows = pstmt.executeUpdate();
+			} else {
+				System.out.println("Connection is not created! 6");
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -183,7 +213,7 @@ public class DB {
 		return affectedRows;
 
 	}
-	
+
 	public void finalize() {
 		try {
 			conn.close();
@@ -192,11 +222,19 @@ public class DB {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		DB db = DB.getInstance();
 		db.connect();
-		
+
+	}
+
+	public static Connection getConn() {
+		return conn;
+	}
+
+	public static void setConn(Connection conn) {
+		DB.conn = conn;
 	}
 
 }
