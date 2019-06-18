@@ -13,7 +13,7 @@ public class DB {
 	private final static String pwd = "96inav07hgiv25";
 	private static DB db = null;
 	private static Connection conn;
-	private static Statement stmt = null;
+	private static PreparedStatement pstmt = null;
 	private static ResultSet rs = null;
 	private static int affectedRows = 0;
 
@@ -29,15 +29,17 @@ public class DB {
 	  }
 
 	private Connection connect() {
+		System.out.println("Before conn?");
 		try {
 			/*
-			 try { Class.forName("org.postgresql.jdbc.Driver"); } catch
-			 (ClassNotFoundException e) {
-			 System.err.println("Unable to load PostgreSQL JDBC Driver 1");
-			 e.printStackTrace(); }
-			*/ 
-
-			// conn = DriverManager.getConnection(url, user, pwd);
+			    try {
+			      Class.forName("org.postgresql.Driver");
+			    } catch (ClassNotFoundException e) {
+			      System.err.println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver");
+			    }
+			    */
+					
+			    System.out.println("Getting to conn");
 
 			if (conn == null) {
 				System.out.println("Connecting.......");
@@ -59,21 +61,21 @@ public class DB {
 
 		try {
 			if (conn != null) {
-				String query = "select * from Medicines";
-				stmt = conn.createStatement();
-				rs = stmt.executeQuery(query);
+				String query = "SELECT * FROM \"Medicines\"";
+				pstmt = conn.prepareStatement(query);
+				rs = pstmt.executeQuery();
 				if (rs.next() == false) {
 					System.out.println("ResultSet in empty in Java");
 				}
 
 				while (rs.next()) {
 
-					int medicineID = rs.getInt("MedicineID");
+					int medID = rs.getInt("MedicineID");
 					String medicineName = rs.getString("MedName");
 					String description = rs.getString("Description");
 					int patientID = rs.getInt("PatientID");
 
-					Medicines medicine = new Medicines(medicineID, medicineName, description, patientID);
+					Medicines medicine = new Medicines(medID, medicineName, description, patientID);
 					medicineList.add(medicine);
 				}
 			} else {
@@ -83,8 +85,8 @@ public class DB {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} finally {
-			if (stmt != null) {
-				stmt.close();
+			if (pstmt != null) {
+				pstmt.close();
 			}
 			if (rs != null) {
 				rs.close();
@@ -98,9 +100,9 @@ public class DB {
 
 		try {
 			if (conn != null) {
-				String query = "select * from Patients";
-				stmt = conn.createStatement();
-				rs = stmt.executeQuery(query);
+				String query = "SELECT * FROM \"Patients\"";
+				pstmt = conn.prepareStatement(query);
+				rs = pstmt.executeQuery();
 				while (rs.next()) {
 
 					int patientID = rs.getInt("PatientID");
@@ -119,8 +121,8 @@ public class DB {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} finally {
-			if (stmt != null) {
-				stmt.close();
+			if (pstmt != null) {
+				pstmt.close();
 			}
 			if (rs != null) {
 				rs.close();
@@ -133,10 +135,11 @@ public class DB {
 
 		try {
 			if (conn != null) {
-				stmt = conn.createStatement();
 				String insert = "INSERT INTO PATIENTS (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
 						+ patientID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
-				stmt.executeUpdate(insert);
+				pstmt = conn.prepareStatement(insert);
+				
+				pstmt.executeUpdate();
 				/*
 				 * Patients patient = new Patients(9, "Bozó", "Piroska",
 				 * "6724 Szeged Rókusi krt 28.", 26); insertPatient(patientID, lastName,
@@ -156,10 +159,11 @@ public class DB {
 
 		try {
 			if (conn != null) {
-				stmt = conn.createStatement();
 				String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
 						+ medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
-				stmt.executeUpdate(insert);
+				pstmt = conn.prepareStatement(insert);
+				
+				pstmt.executeUpdate(insert);
 				/*
 				 * Medicines medicine = new Medicines(33, "Solumedrol", "kúp", 1);
 				 * insertMedicine(medicineID, medicineName, description, patientID);
@@ -214,12 +218,13 @@ public class DB {
 
 	}
 
-	public void finalize() {
-		try {
-			conn.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+	protected void finalize() {
+		if (conn != null) {
+			conn = null; 
+		}
+		
+		if (db != null) {
+			db = null;
 		}
 	}
 

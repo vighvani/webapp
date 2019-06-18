@@ -6,6 +6,7 @@ body {
 
 .middle {
 	text-align: center;
+	float: middle;
 }
 
 .img {
