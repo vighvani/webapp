@@ -20,7 +20,14 @@
 	</div>
 	
 	<div class="Query">
-		<h2 align="center">Patients</h2>
+		<div align="center">
+		<a href="/WebApp/patients" >Patients</a>
+		</div>
+	</div>
+	
+	
+	<div class="Query">
+		
 		<form id="listPatients" name="listPatients" method="POST"
 			action="listPatients">
 

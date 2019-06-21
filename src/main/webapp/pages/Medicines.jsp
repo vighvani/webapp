@@ -13,40 +13,18 @@
 </head>
 <body>
 
-	<div class="sidenav">
+	<<div class="sidenav">
 		<a href="/WebApp/pages/MainPage.jsp"><img class="img" alt="Main page"
 			src="css/stethoscope.jpg"></a> <a
 			href="/WebApp/pages/Patients.jsp">Patients</a> <a href="/WebApp/pages/Medicines.jsp">Medicines</a>
 	</div>
-
+	
 	<div class="Query">
-		<h2 align="center">Medicines</h2>
-		<form id="doGet" name="doGet" method="POST" action="ServletM.java">
-
-			<table align="center" border="2">
-				<tr>
-					<th>ID</th>
-					<th>NAME</th>
-					<th>DESCRIPTION</th>
-					<th>PATIENT ID</th>
-
-				</tr>
-
-				<c:forEach items="${medicinesList}" var="medicine">
-					<tr>
-						<td><c:out value="${medicine.medicineID}" />
-						<td><c:out value="${medicine.medicineName}" /></td>
-						<td><c:out value="${medicine.description}" /></td>
-						<td><c:out value="${medicine.patientID}" /></td>
-
-					</tr>
-				</c:forEach>
-
-			</table>
-
-		</form>
+		<div align="center">
+		<a href="/WebApp/medicines" >Medicines</a>
+		</div>
 	</div>
-
+	
 	<div class="Insert">
 		<h2 align="center">Add medicine</h2>
 		<form id="doPost" name="doPost" method="POST" action="ServletM.java">

@@ -28,34 +28,32 @@ public class ServletP extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		Connection conn = DB.getConn();
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		out.println("<h1>Patient query</h1>");
-		List<Patients> patientsList = null;
-		try {
-			patientsList = db.getAllPatient();
-		} catch (ClassNotFoundException e) {
-
-			e.printStackTrace();
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-
-		if (patientsList == null) {
-			logger.error("Patient list looks empty.");
-			throw new ServletException("Medicine list returned empty!");
-
-		} else {
-			response.setStatus(HttpServletResponse.SC_OK);
+		try  {
+			String query = "SELECT * FROM \"Patients\"";
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next() == false) {
+				System.out.println("ResultSet in empty in Java");
+			}
+			String str = "<table border=1><tr><th>ID</th><th>LAST NAME</th><th>FIRST NAME</th><th>ADDRESS</th><th>AGE</th></tr>";
+			while (rs.next()) {
+				str += "<tr><td>"+rs.getInt(1)+"</td><td>"+rs.getString(2)+"</td><td>"
+			+rs.getString(3)+"</td><td>"+rs.getString(4)+"</td><td>"+rs.getInt(5)+"</td></tr>";
+				
+			}
+			str += "</table>";
+			out.println(str);
+			conn.close();
+			
+		}catch (Exception e) {
+			System.err.println("e");
+		} finally {
+			out.close();
 		}
 		
-		
-		request.setAttribute("patientsList", patientsList);
-		request.getRequestDispatcher("/pages/Patients.jsp").forward(request, response);
-
-		out.close();
-
 	}
 
 

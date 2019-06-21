@@ -23,26 +23,20 @@ public class DB {
 		}
 		return db;
 	}
-	
-	 private DB() { 
-		 connect();
-	  }
+
+	private DB() {
+		connect();
+	}
 
 	private Connection connect() {
-		System.out.println("Before conn?");
 		try {
 			/*
-			    try {
-			      Class.forName("org.postgresql.Driver");
-			    } catch (ClassNotFoundException e) {
-			      System.err.println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver");
-			    }
-			    */
-					
-			    System.out.println("Getting to conn");
+			 * try { Class.forName("org.postgresql.Driver"); } catch (ClassNotFoundException
+			 * e) { System.err.
+			 * println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver"); }
+			 */
 
 			if (conn == null) {
-				System.out.println("Connecting.......");
 				conn = DriverManager.getConnection(url, user, pwd);
 				System.out.println("Successfully connected to the PostgreSQL server.");
 			} else {
@@ -138,7 +132,7 @@ public class DB {
 				String insert = "INSERT INTO PATIENTS (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
 						+ patientID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
 				pstmt = conn.prepareStatement(insert);
-				
+
 				pstmt.executeUpdate();
 				/*
 				 * Patients patient = new Patients(9, "Bozó", "Piroska",
@@ -162,7 +156,7 @@ public class DB {
 				String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
 						+ medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
 				pstmt = conn.prepareStatement(insert);
-				
+
 				pstmt.executeUpdate(insert);
 				/*
 				 * Medicines medicine = new Medicines(33, "Solumedrol", "kúp", 1);
@@ -220,9 +214,9 @@ public class DB {
 
 	protected void finalize() {
 		if (conn != null) {
-			conn = null; 
+			conn = null;
 		}
-		
+
 		if (db != null) {
 			db = null;
 		}
