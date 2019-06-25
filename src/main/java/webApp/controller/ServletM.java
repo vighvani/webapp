@@ -3,7 +3,7 @@ package webApp.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import webApp.dao.DB;
@@ -18,78 +18,40 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-
-
-@WebServlet("/medicines")
+@WebServlet(name = "Medicines", urlPatterns = "/medicines")
 
 public class ServletM extends HttpServlet {
 
 	private static final long serialVersionUID = -2644163711496279913L;
 	private static final Logger logger = Logger.getLogger(ServletM.class);
 	DB db = DB.getInstance();
+	List<Medicines> medicineList = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		Connection conn = DB.getConn();
 		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		try  {
-			String query = "SELECT * FROM \"Medicines\"";
-			PreparedStatement pstmt = conn.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next() == false) {
-				System.out.println("ResultSet in empty in Java");
-			}
-			String str = "<table border=1><tr><th>ID</th><th>NAME</th><th>DESCRIPTION</th><th>PATIENT ID</th></tr>";
-			while (rs.next()) {
-				str += "<tr><td>"+rs.getInt(1)+"</td><td>"+rs.getString(2)+"</td><td>"
-			+rs.getString(3)+"</td><td>"+rs.getInt(4)+"</td></tr>";
-				
-			}
-			str += "</table>";
-			out.println(str);
-			conn.close();
-			
-		}catch (Exception e) {
-			System.err.println("e");
-		} finally {
-			out.close();
+		//PrintWriter out = response.getWriter();
+
+		try {
+			medicineList = db.getAllMedicine();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		
+		request.setAttribute("MedicineList", medicineList);
+
+		request.getRequestDispatcher("pages/Medicines.jsp").forward(request,response);
+
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		try {
-			Connection conn = (Connection) DB.getInstance();
-			PreparedStatement st = conn 
-					.prepareStatement("insert into Medicines values(?, ?, ?, ?)");	  
 
-	            st.setInt(1, Integer.valueOf(request.getParameter("MedicineID"))); 
-
-	            st.setString(2, request.getParameter("MedName")); 
-	            
-	            st.setString(3, request.getParameter("Description")); 
-	            
-	            st.setInt(4, Integer.valueOf(request.getParameter("MedicineID"))); 
-
-	            st.executeUpdate(); 
-	  
-
-	            st.close(); 
-	            conn.close();
-
-	            PrintWriter out = response.getWriter(); 
-	            out.println("<html><body><b>Successfully inserted"
-	                        + "</b></body></html>"); 
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		
+	
 	}
 
 }

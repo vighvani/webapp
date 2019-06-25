@@ -2,32 +2,32 @@ package webApp.model;
 
 public class Medicines {
 
-	private int medicineID;
-	private String medicineName;
+	private int medID;
+	private String medName;
 	private String description;
 	private int patientID;
 
 	public Medicines(int medicineID, String medicineName, String description, int patientID) {
-		this.medicineID = medicineID;
-		this.medicineName = medicineName;
+		this.medID = medicineID;
+		this.medName = medicineName;
 		this.description = description;
 		this.patientID = patientID;
 	}
 
 	public int getMedicineID() {
-		return medicineID;
+		return medID;
 	}
 
 	public void setMedicineID(int medicineID) {
-		this.medicineID = medicineID;
+		this.medID = medicineID;
 	}
 
 	public String getMedicineName() {
-		return medicineName;
+		return medName;
 	}
 
 	public void setMedicineName(String medicineName) {
-		this.medicineName = medicineName;
+		this.medName = medicineName;
 	}
 
 	public String getDescription() {

@@ -2,14 +2,14 @@ package webApp.model;
 
 public class Patients {
 
-	private int patientID;
+	private int patID;
 	private String lastName;
 	private String firstName;
 	private String address;
 	private int age;
 
 	public Patients(int patientID , String lastName, String firstName, String address, int age) {
-		this.patientID = patientID;
+		this.patID = patientID;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.address = address;
@@ -17,11 +17,11 @@ public class Patients {
 	}
 
 	public int getPatientID() {
-		return patientID;
+		return patID;
 	}
 
 	public void setPatientID(int patientID) {
-		this.patientID = patientID;
+		this.patID = patientID;
 	}
 
 	public String getLastName() {

@@ -30,11 +30,6 @@ public class DB {
 
 	private Connection connect() {
 		try {
-			/*
-			 * try { Class.forName("org.postgresql.Driver"); } catch (ClassNotFoundException
-			 * e) { System.err.
-			 * println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver"); }
-			 */
 
 			if (conn == null) {
 				conn = DriverManager.getConnection(url, user, pwd);
@@ -65,13 +60,14 @@ public class DB {
 				while (rs.next()) {
 
 					int medID = rs.getInt("MedicineID");
-					String medicineName = rs.getString("MedName");
+					String medName = rs.getString("MedName");
 					String description = rs.getString("Description");
 					int patientID = rs.getInt("PatientID");
 
-					Medicines medicine = new Medicines(medID, medicineName, description, patientID);
+					Medicines medicine = new Medicines(medID, medName, description, patientID);
 					medicineList.add(medicine);
 				}
+
 			} else {
 				System.out.println("Connection is not created! 1");
 			}
@@ -79,6 +75,7 @@ public class DB {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} finally {
+
 			if (pstmt != null) {
 				pstmt.close();
 			}
@@ -97,15 +94,19 @@ public class DB {
 				String query = "SELECT * FROM \"Patients\"";
 				pstmt = conn.prepareStatement(query);
 				rs = pstmt.executeQuery();
+				if (rs.next() == false) {
+					System.out.println("ResultSet in empty in Java");
+				}
+
 				while (rs.next()) {
 
-					int patientID = rs.getInt("PatientID");
+					int patID = rs.getInt("PatientID");
 					String lastName = rs.getString("LastName");
 					String firstName = rs.getString("FirstName");
 					String address = rs.getString("Address");
 					int age = rs.getInt("Age");
 
-					Patients patient = new Patients(patientID, lastName, firstName, address, age);
+					Patients patient = new Patients(patID, lastName, firstName, address, age);
 					patientList.add(patient);
 				}
 			} else {
@@ -115,6 +116,7 @@ public class DB {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} finally {
+
 			if (pstmt != null) {
 				pstmt.close();
 			}
@@ -153,7 +155,7 @@ public class DB {
 
 		try {
 			if (conn != null) {
-				String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
+				String insert = "INSERT INTO Medicine (MEDICINEID,MEDNAME,DESCRIPTION,PATIENTID) " + "VALUES " + "("
 						+ medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
 				pstmt = conn.prepareStatement(insert);
 
@@ -212,8 +214,9 @@ public class DB {
 
 	}
 
-	protected void finalize() {
+	protected void finalize() throws SQLException {
 		if (conn != null) {
+			conn.close();
 			conn = null;
 		}
 
