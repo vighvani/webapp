@@ -1,6 +1,7 @@
 package webApp.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 
 import java.util.List;
@@ -8,20 +9,20 @@ import java.util.List;
 import webApp.dao.DB;
 import webApp.model.Patients;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 
 @WebServlet(name = "Patients", urlPatterns = "/patients")
 
 public class ServletP extends HttpServlet {
 
 	private static final long serialVersionUID = -8085739320229501369L;
-	private static final Logger logger = Logger.getLogger(ServletP.class);
 	DB db = DB.getInstance();
 	List<Patients> patientList = null;
 
@@ -29,8 +30,7 @@ public class ServletP extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.setContentType("text/html");
-		//PrintWriter out = response.getWriter();
-
+		
 		try {
 			patientList = db.getAllPatient();
 		} catch (ClassNotFoundException e) {
@@ -39,18 +39,52 @@ public class ServletP extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		HttpSession session = request.getSession(false);
 		request.setAttribute("PatientList", patientList);
-
-		request.getRequestDispatcher("pages/Patients.jsp").forward(request,response);
-
+		RequestDispatcher dispatcher = request.getRequestDispatcher("pages/Patients.jsp");
+		if (dispatcher != null){  
+		     dispatcher.forward(request, response);  
+		    }
+		
 
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 				
-		
+		int patID = Integer.parseInt(request.getParameter("patID"));
+        String lastName = request.getParameter("lastName");
+        String firstName = request.getParameter("firstName");
+        String address = request.getParameter("address");
+        int age = Integer.parseInt(request.getParameter("age"));
+         
+        System.out.println("patient ID: " + patID);
+        System.out.println("last name: " + lastName);
+        System.out.println("first name: " + firstName);
+        System.out.println("address: " + address);
+        System.out.println("age: " + age);
+ 
+        
+        System.out.println(request.getParameter("patID"));
+        System.out.println(request.getParameter("age"));
+
+        
+        // do some processing here...
+        db.insertPatient(patID, lastName, firstName, address, age);
+
+         
+        // get response writer
+        PrintWriter writer = response.getWriter();
+         
+        // build HTML code
+        String htmlRespone = "<html>";
+        htmlRespone += "<h2>Patient is successfully added!</h2>";      
+        htmlRespone += "<a href=\"/WebApp/patients\">Back</a>";
+        htmlRespone += "</html>";
+         
+        // return response
+        writer.println(htmlRespone);
+        
 	}
 
 }

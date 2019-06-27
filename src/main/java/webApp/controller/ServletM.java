@@ -3,27 +3,26 @@ package webApp.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import webApp.dao.DB;
 
 import webApp.model.Medicines;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 
 @WebServlet(name = "Medicines", urlPatterns = "/medicines")
 
 public class ServletM extends HttpServlet {
 
 	private static final long serialVersionUID = -2644163711496279913L;
-	private static final Logger logger = Logger.getLogger(ServletM.class);
 	DB db = DB.getInstance();
 	List<Medicines> medicineList = null;
 
@@ -31,7 +30,6 @@ public class ServletM extends HttpServlet {
 			throws ServletException, IOException {
 
 		response.setContentType("text/html");
-		//PrintWriter out = response.getWriter();
 
 		try {
 			medicineList = db.getAllMedicine();
@@ -40,18 +38,40 @@ public class ServletM extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		HttpSession session = request.getSession(false);
 		request.setAttribute("MedicineList", medicineList);
-
-		request.getRequestDispatcher("pages/Medicines.jsp").forward(request,response);
-
+		RequestDispatcher dispatcher = request.getRequestDispatcher("pages/Medicines.jsp");
+		if (dispatcher != null){  
+		     dispatcher.forward(request, response);  
+		    }
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-	
-	}
-
+		 	int medID = Integer.parseInt(request.getParameter("medID"));
+	        String medName = request.getParameter("medName");
+	        String description = request.getParameter("description");
+	        int patientID = Integer.parseInt(request.getParameter("patientID"));
+	         
+	        System.out.println("medicine ID: " + medID);
+	        System.out.println("medicine name: " + medName);
+	        System.out.println("description: " + description);
+	        System.out.println("patient ID: " + patientID);
+	 
+	        db.insertMedicine(medID, medName, description, patientID);
+	         
+	        PrintWriter writer = response.getWriter();
+	         
+	        String htmlRespone = "<html>";
+	        htmlRespone += "<h2>Medicine is successfully added!</h2>";
+	        htmlRespone += "<a href=\"/WebApp/medicines\">Back</a>";
+	        htmlRespone += "</html>";
+	         
+	        writer.println(htmlRespone);
+	         
+	    }
 }
+
+

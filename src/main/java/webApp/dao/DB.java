@@ -12,7 +12,7 @@ public class DB {
 	private final static String user = "postgres";
 	private final static String pwd = "96inav07hgiv25";
 	private static DB db = null;
-	private static Connection conn;
+	private static Connection conn=null;
 	private static PreparedStatement pstmt = null;
 	private static ResultSet rs = null;
 	private static int affectedRows = 0;
@@ -29,15 +29,18 @@ public class DB {
 	}
 
 	private Connection connect() {
+		
 		try {
-
+			
 			if (conn == null) {
 				conn = DriverManager.getConnection(url, user, pwd);
 				System.out.println("Successfully connected to the PostgreSQL server.");
+
 			} else {
-				System.err.println("Connection is not created 0");
+				System.out.println("Connection is not created 0");
+
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
@@ -108,6 +111,7 @@ public class DB {
 
 					Patients patient = new Patients(patID, lastName, firstName, address, age);
 					patientList.add(patient);
+
 				}
 			} else {
 				System.out.println("Connection is not created! 2");
@@ -127,20 +131,16 @@ public class DB {
 		return patientList;
 	}
 
-	public void insertPatient(int patientID, String lastName, String firstName, String address, int age) {
+	public void insertPatient(int patID, String lastName, String firstName, String address, int age) {
 
 		try {
 			if (conn != null) {
-				String insert = "INSERT INTO PATIENTS (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
-						+ patientID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
+				String insert = "INSERT INTO Patients (PATIENTID,LASTNAME,FIRSTNAME,ADDRESS,AGE) " + "VALUES " + "("
+						+ patID + ", " + lastName + ", " + firstName + ", " + address + ", " + age + ")";
 				pstmt = conn.prepareStatement(insert);
 
 				pstmt.executeUpdate();
-				/*
-				 * Patients patient = new Patients(9, "Bozó", "Piroska",
-				 * "6724 Szeged Rókusi krt 28.", 26); insertPatient(patientID, lastName,
-				 * firstName, address, age);
-				 */
+				
 			} else {
 				System.out.println("Connection is not created! 3");
 			}
@@ -151,19 +151,16 @@ public class DB {
 
 	}
 
-	public void insertMedicine(int medicineID, String medicineName, String description, int patientID) {
+	public void insertMedicine(int medID, String medName, String description, int patientID) {
 
 		try {
 			if (conn != null) {
-				String insert = "INSERT INTO Medicine (MEDICINEID,MEDNAME,DESCRIPTION,PATIENTID) " + "VALUES " + "("
-						+ medicineID + ", " + medicineName + ", " + description + ", " + patientID + ")";
+				String insert = "INSERT INTO MedicineMEDÁ (MEDICINEID,MEDNAME,DESCRIPTION,PATIENTID) " + "VALUES " + "("
+						+ medID + ", " + medName + ", " + description + ", " + patientID + ")";
 				pstmt = conn.prepareStatement(insert);
 
 				pstmt.executeUpdate(insert);
-				/*
-				 * Medicines medicine = new Medicines(33, "Solumedrol", "kúp", 1);
-				 * insertMedicine(medicineID, medicineName, description, patientID);
-				 */
+				
 			} else {
 				System.out.println("Connection is not created! 4");
 			}
@@ -225,11 +222,6 @@ public class DB {
 		}
 	}
 
-	public static void main(String[] args) {
-		DB db = DB.getInstance();
-		db.connect();
-
-	}
 
 	public static Connection getConn() {
 		return conn;
