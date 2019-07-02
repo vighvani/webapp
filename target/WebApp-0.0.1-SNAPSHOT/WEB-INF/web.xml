@@ -1,34 +1,8 @@
-
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.4//EN"
- "http://java.sun.com/dtd/web-app_2_4.dtd" >
-
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-                        http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-                        version="3.0">
-  <display-name>Web Application for Patients and their medicines</display-name>
-  
-<!--servlet>
-   <servlet-name>Patients</servlet-name>
-   <servlet-class>webApp.controller.ServletP</servlet-class>
-</servlet>
-
-<servlet>
-   <servlet-name>Medicines</servlet-name>
-   <servlet-class>webApp.controller.ServletM</servlet-class>
-</servlet>
-
-<servlet-mapping>
-   <servlet-name>Patients</servlet-name>
-   <url-pattern>/patients</url-pattern>
-</servlet-mapping>
-
-<servlet-mapping>
-   <servlet-name>Medicines</servlet-name>
-   <url-pattern>/medicines</url-pattern>
-</servlet-mapping-->
-
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_4_0.xsd" 
+version="4.0">
+  <display-name>WebApp</display-name>
 </web-app>
-

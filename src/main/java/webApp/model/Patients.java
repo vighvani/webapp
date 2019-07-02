@@ -1,5 +1,8 @@
 package webApp.model;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Patients {
 
 	private int patID;
@@ -8,20 +11,20 @@ public class Patients {
 	private String address;
 	private int age;
 
-	public Patients(int patientID , String lastName, String firstName, String address, int age) {
-		this.patID = patientID;
+	public Patients(int patID, String lastName, String firstName, String address, int age) {
+		this.patID = patID;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.address = address;
 		this.age = age;
 	}
 
-	public int getPatientID() {
+	public int getPatID() {
 		return patID;
 	}
 
-	public void setPatientID(int patientID) {
-		this.patID = patientID;
+	public void setPatID(int patID) {
+		this.patID = patID;
 	}
 
 	public String getLastName() {

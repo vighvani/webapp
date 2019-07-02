@@ -1,4 +1,5 @@
 webApp\dao\DB.class
+webApp\controller\Deleting.class
 webApp\controller\ServletM.class
 webApp\model\Medicines.class
 webApp\controller\ServletP.class

@@ -9,7 +9,6 @@ body {
 	float: middle;
 }
 
-
 .img {
 	border: 0px;
 	width: 100px;
@@ -27,14 +26,14 @@ body {
 	overflow-x: hidden;
 	padding-top: 20px;
 }
+
 .container {
-   height:100%;
-   width: 90%;
-   text-align: center;
-   align: center;
+	height: 100%;
+	width: 90%;
+	text-align: center;
+	align: center;
 	float: middle;
 }
-
 
 .sidenav a {
 	padding: 6px 8px 6px 16px;

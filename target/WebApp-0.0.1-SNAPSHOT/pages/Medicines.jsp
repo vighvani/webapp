@@ -1,11 +1,11 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<%@ page import="java.sql.*" import="webApp.*"
-	import="webApp.model.Medicines" import="webApp.controller.ServletM"
-	import="java.util.List"%>
-
+<%@ page errorPage="ShowError.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="webApp.model.Medicines" import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,44 +15,41 @@
 <title>Medicines</title>
 </head>
 <body>
-
 	<div class="sidenav">
 		<img class="img" alt="img" src="pages/css/stethoscope.jpg"> <a
 			href="/WebApp/patients">Patients</a> <a href="/WebApp/medicines">Medicines</a>
 	</div>
+	
 	<div class="container" align="center">
-
 		<div>
-			<h2>Retrieve data from medicines</h2>
-			<form id="doGet" name="doGet" method="GET" action="medicines">
-				<table border="2" align="center">
+			<h2>Retrieve data about medicines</h2>
+			<table border="2" align="center">
+				<tr>
+					<th>ID</th>
+					<th>NAME</th>
+					<th>DESCRIPTION</th>
+					<th>PATIENT ID</th>
+				</tr>
+				<%
+					@SuppressWarnings("unchecked")
+					List<Medicines> MedicineList = (ArrayList<Medicines>) request.getAttribute("MedicineList");
+				System.out.println(MedicineList.size());
+				%>	
+				
+				<c:forEach items="${MedicineList}" var="medicine" begin="0">
 					<tr>
-						<th>ID</th>
-						<th>NAME</th>
-						<th>DESCRIPTION</th>
-						<th>PATIENT ID</th>
+						<td><c:out value="${medicine.medID}" /></td>
+						<td><c:out value="${medicine.medName}" /></td>
+						<td><c:out value="${medicine.description}" /></td>
+						<td><c:out value="${medicine.patientID}" /></td>
 					</tr>
-					<%
-					List<Medicines> patientList = (List<Medicines>) request.getAttribute("MedicineList");
-					%>
-
-					<c:forEach items="${medicineList}" var="medicine">
-
-						<tr>
-							<td><c:out value="${medicine.medID}" /></td>
-							<td><c:out value="${medicine.medName}" /></td>
-							<td><c:out value="${medicine.description}" /></td>
-							<td><c:out value="${medicine.patientID}" /></td>
-						</tr>
-					</c:forEach>
-				</table>
-			</form>
+				</c:forEach>
+			</table>
 		</div>
 
 		<div>
 			<h2>Add medicine</h2>
-			<form id="doPost" name="doPost" method="POST" action="medicines">
-
+			<form method="POST" action="medicines">
 				<table border="2" align="center">
 					<tr>
 						<th>ID</th>
@@ -60,7 +57,6 @@
 						<th>DESCRIPTION</th>
 						<th>PATIENT ID</th>
 						<th>ADD MEDICINE</th>
-
 					</tr>
 					<tr>
 						<td><input type="text" name="medID"></td>
@@ -72,7 +68,6 @@
 				</table>
 			</form>
 		</div>
-
 
 		<div align="center" bottom="0">
 			<p>
